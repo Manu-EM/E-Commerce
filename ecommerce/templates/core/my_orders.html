@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+  <h2>My Orders</h2>
+  {% if orders %}
+  <table class="table table-bordered table-striped mt-3">
+    <thead>
+      <tr>
+        <th>Order ID</th>
+        <th>Date</th>
+        <th>Status</th>
+        <th>Items</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for order in orders %}
+      <tr>
+        <td>#{{ order.id }}</td>
+        <td>{{ order.created_at|date:"M d, Y H:i" }}</td>
+        <td>
+          {% if order.status == "Confirmed" %}
+            <span class="badge bg-success">{{ order.status }}</span>
+          {% elif order.status == "Pending" %}
+            <span class="badge bg-warning">{{ order.status }}</span>
+          {% else %}
+            <span class="badge bg-secondary">{{ order.status }}</span>
+          {% endif %}
+        </td>
+        <td>
+          <ul>
+            {% for item in order.orderitem_set.all %}
+              <li>{{ item.product.name }} (x{{ item.quantity }})</li>
+            {% endfor %}
+          </ul>
+        </td>
+        <td>
+          ₹{{ order.orderitem_set.all|map:"total_price"|sum }}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p>You have no orders yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

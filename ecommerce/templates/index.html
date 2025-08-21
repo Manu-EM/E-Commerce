@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home | ShopKart{% endblock %}
+
+{% block content %}
+
+<!-- Banner / Carousel -->
+<div id="mainCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="{% static 'images/banner1.jpg' %}" class="d-block w-100" alt="Banner 1">
+    </div>
+    <div class="carousel-item">
+      <img src="{% static 'images/banner2.jpg' %}" class="d-block w-100" alt="Banner 2">
+    </div>
+    <div class="carousel-item">
+      <img src="{% static 'images/banner3.jpg' %}" class="d-block w-100" alt="Banner 3">
+    </div>
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon"></span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
+    <span class="carousel-control-next-icon"></span>
+  </button>
+</div>
+
+<!-- Categories -->
+<h4 class="mb-3">Top Categories</h4>
+<div class="d-flex overflow-auto mb-5 category-section">
+  <div class="text-center mx-3">
+    <img src="{% static 'images/mobile.png' %}" class="rounded-circle border p-3" width="100" height="100" alt="Mobiles">
+    <p class="mt-2">Mobiles</p>
+  </div>
+  <div class="text-center mx-3">
+    <img src="{% static 'images/laptop.png' %}" class="rounded-circle border p-3" width="100" height="100" alt="Laptops">
+    <p class="mt-2">Laptops</p>
+  </div>
+  <div class="text-center mx-3">
+    <img src="{% static 'images/fashion.png' %}" class="rounded-circle border p-3" width="100" height="100" alt="Fashion">
+    <p class="mt-2">Fashion</p>
+  </div>
+  <div class="text-center mx-3">
+    <img src="{% static 'images/home.png' %}" class="rounded-circle border p-3" width="100" height="100" alt="Home">
+    <p class="mt-2">Home</p>
+  </div>
+  <div class="text-center mx-3">
+    <img src="{% static 'images/electronics.png' %}" class="rounded-circle border p-3" width="100" height="100" alt="Electronics">
+    <p class="mt-2">Electronics</p>
+  </div>
+</div>
+
+<!-- Products Section -->
+<h4 class="mb-3">Best of Electronics</h4>
+<div class="row row-cols-1 row-cols-md-4 g-4 mb-5">
+  {% for product in products %}
+  <div class="col">
+    <div class="card h-100 shadow-sm product-card">
+      <img src="{{ product.image.url }}" class="card-img-top p-3" alt="{{ product.name }}">
+      <div class="card-body text-center">
+        <h6 class="card-title">{{ product.name|truncatechars:20 }}</h6>
+        <p class="text-success fw-bold">₹ {{ product.price }}</p>
+        <a href="{% url 'product_detail' product.slug %}" class="btn btn-sm btn-primary">View</a>
+      </div>
+    </div>
+  </div>
+  {% empty %}
+  <p>No products available.</p>
+  {% endfor %}
+</div>
+
+<!-- Fashion Section -->
+<h4 class="mb-3">Trending in Fashion</h4>
+<div class="row row-cols-1 row-cols-md-4 g-4">
+  {% for product in fashion_products %}
+  <div class="col">
+    <div class="card h-100 shadow-sm product-card">
+      <img src="{{ product.image.url }}" class="card-img-top p-3" alt="{{ product.name }}">
+      <div class="card-body text-center">
+        <h6 class="card-title">{{ product.name|truncatechars:20 }}</h6>
+        <p class="text-success fw-bold">₹ {{ product.price }}</p>
+        <a href="{% url 'product_detail' product.slug %}" class="btn btn-sm btn-primary">View</a>
+      </div>
+    </div>
+  </div>
+  {% empty %}
+  <p>No products available.</p>
+  {% endfor %}
+</div>
+
+{% endblock %}

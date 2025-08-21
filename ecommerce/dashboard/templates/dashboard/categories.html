@@ -1,0 +1,13 @@
+<!-- dashboard/templates/dashboard/categories.html -->
+{% extends "dashboard/base.html" %}
+{% block title %}Categories{% endblock %}
+
+{% block content %}
+<h1>Categories</h1>
+<a href="{% url 'add_category' %}" class="btn btn-primary mb-3">Add Category</a>
+<ul class="list-group">
+    {% for cat in categories %}
+    <li class="list-group-item">{{ cat.name }}</li>
+    {% endfor %}
+</ul>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+  <h2>Checkout</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>Qty</th>
+        <th>Price</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in cart %}
+      <tr>
+        <td>{{ item.product.name }}</td>
+        <td>{{ item.quantity }}</td>
+        <td>₹{{ item.product.price }}</td>
+        <td>₹{{ item.quantity|multiply:item.product.price }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <form method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label class="form-label">Select Payment Method</label><br>
+      <input type="radio" name="payment_method" value="COD" required> Cash on Delivery<br>
+      <input type="radio" name="payment_method" value="Online" required> Pay Online
+    </div>
+    <button type="submit" class="btn btn-primary">
+      <i class="bi bi-bag-check"></i> Place Order
+    </button>
+  </form>
+</div>
+{% endblock %}

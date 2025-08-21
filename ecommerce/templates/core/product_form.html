@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load custom_filters %}  <!-- for add_class filter -->
+{% block content %}
+<div class="container mt-4">
+    <h2>{% if form.instance.pk %}Edit{% else %}Add{% endif %} Product</h2>
+    <form method="post" enctype="multipart/form-data" class="mt-3">
+        {% csrf_token %}
+        <div class="mb-3">
+            {{ form.category|add_class:"form-select" }}
+        </div>
+        <div class="mb-3">
+            {{ form.name|add_class:"form-control" }}
+        </div>
+        <div class="mb-3">
+            {{ form.description|add_class:"form-control" }}
+        </div>
+        <div class="mb-3">
+            {{ form.price|add_class:"form-control" }}
+        </div>
+        <div class="mb-3">
+            {{ form.image|add_class:"form-control" }}
+        </div>
+        <button type="submit" class="btn btn-success">
+            <i class="bi bi-check-circle"></i> Save
+        </button>
+        <a href="{% url 'product_list' %}" class="btn btn-secondary">
+            <i class="bi bi-x-circle"></i> Cancel
+        </a>
+    </form>
+</div>
+{% endblock %}
