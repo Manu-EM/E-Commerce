@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 from core.models import Product, Category, Order
 from django.utils.text import slugify
+from django.contrib import messages
 
 # Only staff/admin users
 def staff_required(view_func):
@@ -27,32 +28,38 @@ def manage_products(request):
 @login_required
 @staff_required
 def add_product(request):
-    categories = Category.objects.all()
+    # ✅ Fetch only active categories
+    categories = Category.objects.filter(is_active=True)
+
     if request.method == "POST":
         name = request.POST.get("name")
         price = request.POST.get("price")
         category_id = request.POST.get("category")
         description = request.POST.get("description", "")
         image = request.FILES.get("image")
+        stock = request.POST.get("stock", 0)
 
         if not category_id:
             return render(request, "dashboard/add_product.html", {
-                "categories": categories,
+                "categories": categories,   # ✅ use filtered categories
                 "error": "Please select a category",
             })
 
-        category = get_object_or_404(Category, id=category_id)
+        category = get_object_or_404(Category, id=category_id, is_active=True)  # ✅ Ensure only active category can be selected
+
         Product.objects.create(
             name=name,
             price=price,
             category=category,
             description=description,
             image=image,
+            stock=stock,
             slug=slugify(name)
         )
         return redirect("manage_products")
 
-    return render(request, "dashboard/add_product.html", {"categories": categories})
+    return render(request, "dashboard/add_product.html", {"categories": categories})  # ✅ use filtered categories
+
 
 @login_required
 @staff_required
@@ -99,9 +106,45 @@ def manage_categories(request):
 def add_category(request):
     if request.method == "POST":
         name = request.POST.get("name")
+        categories = Category.objects.filter(is_active=True)  
+
         Category.objects.create(name=name, slug=slugify(name))
         return redirect("manage_categories")
     return render(request, "dashboard/add_category.html")
+
+
+
+@login_required
+@staff_required
+def edit_category(request, category_id):
+    category = get_object_or_404(Category, id=category_id)
+
+    if request.method == "POST":
+        category.name = request.POST.get("name")
+        category.slug = slugify(category.name)
+        category.save()
+        return redirect("manage_categories")
+
+    return render(request, "dashboard/edit_category.html", {"category": category})
+
+
+def toggle_category(request, category_id):
+    category = get_object_or_404(Category, id=category_id)
+    category.is_active = not category.is_active
+    category.save()
+    status = "activated" if category.is_active else "deactivated"
+    messages.success(request, f"Category '{category.name}' has been {status}.")
+    return redirect("manage_categories")  # your categories list view name
+
+
+@login_required
+@staff_required
+def delete_category(request, category_id):
+    category = get_object_or_404(Category, id=category_id)
+    category.delete()
+    return redirect("manage_categories")
+
+
 
 # ----------------- ORDER MANAGEMENT -----------------
 @login_required
@@ -109,3 +152,4 @@ def add_category(request):
 def manage_orders(request):
     orders = Order.objects.all()
     return render(request, "dashboard/orders.html", {"orders": orders})
+

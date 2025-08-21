@@ -6,8 +6,12 @@
     <!-- Cart Items -->
     <div class="col-md-8">
         <div class="card shadow-sm mb-4">
-            <div class="card-header bg-primary text-white">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                 <h5 class="mb-0">My Cart</h5>
+                <!-- Back Button -->
+                <a href="{% url 'index' %}" class="btn btn-light btn-sm">
+                    <i class="bi bi-house-door"></i> Back to Home
+                </a>
             </div>
             <div class="card-body">
                 {% if cart_items %}
@@ -38,13 +42,18 @@
                         <div class="col-3 text-end">
                             <form method="post" action="{% url 'remove_from_cart' item.id %}">
                                 {% csrf_token %}
-                                <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                                <button type="submit" class="btn btn-danger btn-sm">
+                                    <i class="bi bi-trash"></i> Remove
+                                </button>
                             </form>
                         </div>
                     </div>
                     {% endfor %}
                 {% else %}
-                    <p class="text-center">Your cart is empty 😢</p>
+                    <div class="text-center text-muted">
+                        <i class="bi bi-cart-x" style="font-size: 2rem;"></i>
+                        <p>Your cart is empty</p>
+                    </div>
                 {% endif %}
             </div>
         </div>
@@ -69,7 +78,9 @@
                     <span>Total Amount</span>
                     <span>₹ {{ final_price }}</span>
                 </p>
-                <a href="{% url 'checkout' %}" class="btn btn-success w-100 mt-3">Proceed to Checkout</a>
+                <a href="{% url 'checkout' %}" class="btn btn-success w-100 mt-3">
+                    <i class="bi bi-credit-card"></i> Proceed to Checkout
+                </a>
             </div>
         </div>
     </div>

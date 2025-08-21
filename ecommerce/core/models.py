@@ -6,6 +6,7 @@ from django.utils.text import slugify
 # ----------------- CATEGORY -----------------
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
+    is_active = models.BooleanField(default=True)  # <-- Toggle field
     slug = models.SlugField(max_length=120, unique=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 

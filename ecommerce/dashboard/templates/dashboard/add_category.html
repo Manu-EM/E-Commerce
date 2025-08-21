@@ -3,13 +3,29 @@
 {% block title %}Add Category{% endblock %}
 
 {% block content %}
-<h1>Add Category</h1>
-<form method="POST">
-    {% csrf_token %}
-    <div class="mb-3">
-        <label>Name</label>
-        <input type="text" name="name" class="form-control" required>
+<div class="container mt-4">
+    <!-- Card wrapper -->
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-primary text-white d-flex align-items-center">
+            <i class="bi bi-folder-plus me-2"></i>
+            <h5 class="mb-0">Add New Category</h5>
+        </div>
+        <div class="card-body">
+            <form method="POST">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Category Name</label>
+                    <input type="text" name="name" class="form-control" placeholder="Enter category name" required>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-plus-circle me-1"></i> Add Category
+                </button>
+                <a href="{% url 'manage_categories' %}" class="btn btn-outline-secondary ms-2">
+                    <i class="bi bi-arrow-left"></i> Back
+                </a>
+
+            </form>
+        </div>
     </div>
-    <button type="submit" class="btn btn-success">Add Category</button>
-</form>
+</div>
 {% endblock %}

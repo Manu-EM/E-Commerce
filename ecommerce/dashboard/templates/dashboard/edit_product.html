@@ -1,37 +1,71 @@
 {% extends "dashboard/base.html" %}
-{% block title %}Edit Product{% endblock %}
+{% block title %}Edit Product | Admin{% endblock %}
 
 {% block content %}
-<h1>Edit Product</h1>
-<form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    <div class="mb-3">
-        <label>Name</label>
-        <input type="text" name="name" value="{{ product.name }}" class="form-control" required>
+<div class="container mt-4">
+
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-primary"><i class="bi bi-pencil-square"></i> Edit Product</h2>
+        <a href="{% url 'manage_products' %}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left"></i>Back</a>
     </div>
-    <div class="mb-3">
-        <label>Price</label>
-        <input type="number" step="0.01" name="price" value="{{ product.price }}" class="form-control" required>
+
+    <!-- Edit Form Card -->
+    <div class="card shadow-sm border-0 rounded-3">
+        <div class="card-body p-4">
+
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <!-- Product Name -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Product Name</label>
+                    <input type="text" name="name" value="{{ product.name }}" 
+                           class="form-control form-control-lg" required>
+                </div>
+
+                <!-- Price -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Price (₹)</label>
+                    <input type="number" step="0.01" name="price" value="{{ product.price }}" 
+                           class="form-control form-control-lg" required>
+                </div>
+
+                <!-- Category -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Category</label>
+                    <select name="category" class="form-select form-select-lg">
+                        {% for cat in categories %}
+                        <option value="{{ cat.id }}" {% if product.category.id == cat.id %}selected{% endif %}>
+                            {{ cat.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Description -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Description</label>
+                    <textarea name="description" rows="3" class="form-control form-control-lg">{{ product.description }}</textarea>
+                </div>
+
+                <!-- Current Image -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Current Image</label><br>
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" width="120" height="120" class="rounded shadow-sm mb-2">
+                    {% endif %}
+                    <input type="file" name="image" class="form-control mt-2">
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="d-flex justify-content-end gap-2">
+                    <a href="{% url 'manage_products' %}" class="btn btn-outline-danger">Cancel</a>
+                    <button type="submit" class="btn btn-success px-4 fw-semibold">Update Product</button>
+                </div>
+
+            </form>
+        </div>
     </div>
-    <div class="mb-3">
-        <label>Category</label>
-        <select name="category" class="form-control">
-            {% for cat in categories %}
-            <option value="{{ cat.id }}" {% if product.category.id == cat.id %}selected{% endif %}>{{ cat.name }}</option>
-            {% endfor %}
-        </select>
-    </div>
-    <div class="mb-3">
-        <label>Description</label>
-        <textarea name="description" class="form-control">{{ product.description }}</textarea>
-    </div>
-    <div class="mb-3">
-        <label>Current Image</label><br>
-        {% if product.image %}
-            <img src="{{ product.image.url }}" width="100" height="100"><br>
-        {% endif %}
-        <input type="file" name="image" class="form-control mt-2">
-    </div>
-    <button type="submit" class="btn btn-success">Update Product</button>
-</form>
+</div>
 {% endblock %}

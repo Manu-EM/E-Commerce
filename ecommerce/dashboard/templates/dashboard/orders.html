@@ -3,31 +3,56 @@
 {% block title %}Orders{% endblock %}
 
 {% block content %}
-<h1>Orders</h1>
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>User</th>
-            <th>Product(s)</th>
-            <th>Total</th>
-            <th>Status</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for order in orders %}
-        <tr>
-            <td>{{ order.id }}</td>
-            <td>{{ order.user.username }}</td>
-            <td>
-                {% for item in order.items.all %}
-                    {{ item.product.name }} ({{ item.quantity }})<br>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold text-dark">
+        <i class="bi bi-bag-check-fill text-primary me-2"></i> Orders
+    </h2>
+</div>
+
+<div class="card shadow-sm border-0 rounded-3">
+    <div class="card-body">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col"><i class="bi bi-hash"></i> ID</th>
+                    <th scope="col"><i class="bi bi-person-fill"></i> User</th>
+                    <th scope="col"><i class="bi bi-box-seam"></i> Product(s)</th>
+                    <th scope="col"><i class="bi bi-currency-rupee"></i> Total</th>
+                    <th scope="col"><i class="bi bi-gear-fill"></i> Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    <td class="fw-semibold">#{{ order.id }}</td>
+                    <td>{{ order.user.username }}</td>
+                    <td>
+                        {% for item in order.items.all %}
+                            <span class="badge bg-light text-dark border mb-1">
+                                {{ item.product.name }} × {{ item.quantity }}
+                            </span><br>
+                        {% endfor %}
+                    </td>
+                    <td class="fw-bold text-success">
+                        <i class="bi bi-currency-rupee"></i>{{ order.total_price }}
+                    </td>
+                    <td>
+                        {% if order.status == "Pending" %}
+                            <span class="badge bg-warning text-dark"><i class="bi bi-hourglass-split"></i> {{ order.status }}</span>
+                        {% elif order.status == "Shipped" %}
+                            <span class="badge bg-info text-dark"><i class="bi bi-truck"></i> {{ order.status }}</span>
+                        {% elif order.status == "Delivered" %}
+                            <span class="badge bg-success"><i class="bi bi-check-circle-fill"></i> {{ order.status }}</span>
+                        {% elif order.status == "Canceled" %}
+                            <span class="badge bg-danger"><i class="bi bi-x-circle-fill"></i> {{ order.status }}</span>
+                        {% else %}
+                            <span class="badge bg-secondary">{{ order.status }}</span>
+                        {% endif %}
+                    </td>
+                </tr>
                 {% endfor %}
-            </td>
-            <td>{{ order.total_price }}</td>
-            <td>{{ order.status }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+            </tbody>
+        </table>
+    </div>
+</div>
 {% endblock %}

@@ -14,6 +14,12 @@ urlpatterns = [
     # Categories
     path('categories/', views.manage_categories, name='manage_categories'),
     path('categories/add/', views.add_category, name='add_category'),
+    path('categories/edit/<int:category_id>/', views.edit_category, name='edit_category'),
+    path('categories/delete/<int:category_id>/', views.delete_category, name='delete_category'),
+    path("category/toggle/<int:category_id>/", views.toggle_category, name="toggle_category"),
+
+
+
 
     # Orders
     path('orders/', views.manage_orders, name='manage_orders'),

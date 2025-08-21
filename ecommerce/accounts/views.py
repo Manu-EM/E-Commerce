@@ -52,7 +52,11 @@ def user_login(request):
                 return redirect('dashboard_home')  # replace with your dashboard URL name
             else:
                 # Redirect normal users
-                return redirect('profile')  # or 'home'
+                next_url = request.GET.get("next")
+                if next_url:
+                    return redirect(next_url)
+                return redirect("index")
+
 
         else:
             messages.error(request, "Invalid username or password.")
